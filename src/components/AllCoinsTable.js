@@ -2,30 +2,30 @@ import React, { useState, useEffect, useMemo } from "react";
 import { useTable, usePagination } from "react-table";
 
 function AllCoinsTable() {
-  const [allCoins, setAllCoins] = useState([])
-  const currency = "usd"
-  const per_page = 1000
-  const [isLoading, setIsLoading] = useState(false)
+  const [allCoins, setAllCoins] = useState([]);
+  const currency = "usd";
+  const per_page = 1000;
+  const [isLoading, setIsLoading] = useState(false);
 
   const fetchCoins = () => {
-    setIsLoading(true)
+    setIsLoading(true);
     fetch(`https://api.coingecko.com/api/v3/coins/markets?vs_currency=${currency}&per_page=${per_page}`)
       .then (res => res.json())
       .then(data => {
         setIsLoading(false)
         setAllCoins(data)
       })
-      .catch(error => console.log(error.message))
-  }
+      .catch(error => console.log(error.message));
+  };
 
   useEffect(() => {
     fetchCoins();
-  }, [])
+  }, []);
 
   const columnsI = [];
   
   function createColumns() {
-    const columnKeys = allCoins.flatMap(Object.keys)
+    const columnKeys = allCoins.flatMap(Object.keys);
     const uniqColumnKeys = Array.from(new Set(columnKeys));
 
     for (let i = 0; i < uniqColumnKeys.length; i++) {
@@ -34,13 +34,19 @@ function AllCoinsTable() {
       if ( uniqColumnKeys[i].includes("id") || uniqColumnKeys[i].includes("rank") || uniqColumnKeys[i].includes("roi")) { 
         continue; 
       }
-      let value = uniqColumnKeys[i].replaceAll("_", " ")
-      headings["Header"] = value.charAt(0).toUpperCase() + value.slice(1);
-      headings["accessor"] = uniqColumnKeys[i]
+
+      let value = uniqColumnKeys[i].replaceAll("_", " ");
+    
+      headings["Header"] = value.toLowerCase()
+        .split(' ')
+        .map((el) => el.charAt(0).toUpperCase() + el.substring(1))
+        .join(' ');
+      
+      headings["accessor"] = uniqColumnKeys[i];
       
       if (uniqColumnKeys[i].includes("symbol")) {
         headings["Cell"] = ({ cell: { value } }) => value.toUpperCase();
-      }
+      };
 
       if (uniqColumnKeys[i].includes("image")) {
         headings["Cell"] = ({ cell: { value } }) => (
@@ -50,7 +56,7 @@ function AllCoinsTable() {
             src={value}
           />
         )  
-      }
+      };
 
       if (uniqColumnKeys[i].includes("date")) {
         headings["Cell"] = ({ cell: { value } }) => {
@@ -62,7 +68,7 @@ function AllCoinsTable() {
             timeZoneName:'short',
           }).format(date);
         }
-      }
+      };
       
       if ( uniqColumnKeys[i].includes("percentage")) {
         headings["Cell"] = ({ cell: { value } }) => {
@@ -72,7 +78,7 @@ function AllCoinsTable() {
             style: 'percent', 
           }).format(value);
         }
-      }
+      };
                                                                                                                                                                                                                       
       if ( uniqColumnKeys[i] === "current_price" || uniqColumnKeys[i] === "price_change_24h"|| uniqColumnKeys[i] === "market_cap" || uniqColumnKeys[i] === "market_cap_change_24h" || uniqColumnKeys[i] === "low_24h" || uniqColumnKeys[i] === "high_24h" || uniqColumnKeys[i] === "fully_diluted_valuation" || uniqColumnKeys[i] === "atl" || uniqColumnKeys[i] === "ath" ) {
         headings["Cell"] = ({ cell: { value } }) => new Intl.NumberFormat('en-US', { 
@@ -81,15 +87,15 @@ function AllCoinsTable() {
           currency: 'USD',
           currencySign: 'accounting',
         }).format(value);
-      }
+      };
      
       if ( uniqColumnKeys[i] === "total_volume" || uniqColumnKeys[i] === "total_supply"|| uniqColumnKeys[i] === "max_supply" || uniqColumnKeys[i] === "circulating_supply" ) {
         headings["Cell"] = ({ cell: { value } }) => new Intl.NumberFormat('en-US').format(value);
-      }
+      };
 
       columnsI.push(headings);
     }
-  }
+  };
 
   createColumns();
 
@@ -117,10 +123,22 @@ function AllCoinsTable() {
 
   const { pageIndex } = state;
 
+  const ProgressBar = ({ progressPercentage }) => {
+    return (
+      <div className='h-1 w-full bg-gray-300'>
+        <div
+          style={{ width: `${progressPercentage}%`}}
+          className={`h-full ${
+              progressPercentage < 70 ? 'bg-red-600' : 'bg-green-600'}`}>
+        </div>
+      </div>
+    );
+  };
+
   return (
     <>
       <div className="mt-2 flex flex-col">
-        {isLoading && <p>Loading ..</p>}
+        {isLoading && <ProgressBar />}
         <div className="py-2 align-middle inline-block min-w-full xs:px-4 sm:px-6 lg:px-8">
           <div className="shadow overflow-auto t-2 sm:rounded-lg"></div>
             <table 
@@ -143,7 +161,6 @@ function AllCoinsTable() {
                     </tr>
                   ))
                 }
-                
               </thead>
               <tbody
                 {...getTableBodyProps()}
@@ -167,7 +184,6 @@ function AllCoinsTable() {
                     </tr>
                   )
                 })}
-                
               </tbody>
           </table>
           <div className="flex flex-col items-center max-w-md mx-auto bg-white overflow-hidden md:max-w-2xl mt-4 mb-4">
@@ -197,7 +213,7 @@ function AllCoinsTable() {
         </div>
       </div>
     </> 
-  )
-}
+  );
+};
 
 export default AllCoinsTable;

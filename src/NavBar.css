@@ -1,0 +1,18 @@
+.navbar {
+  background:white;
+  position: fixed; /* Set the navbar to fixed position */
+  top: 0; /* Position the navbar at the top of the page */
+  left:0;
+  margin: 0px;
+  padding:10px 70px 10px 70px;
+  width: 100%; /* Full width */
+  right: 0;
+  /* border: solid 1px black; */
+}
+
+/*  */
+/* @media (max-width: 600px) {
+  .navbar {
+    position: sticky;
+  }
+} */

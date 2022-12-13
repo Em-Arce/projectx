@@ -137,7 +137,7 @@ function AllCoinsTable() {
 
   return (
     <>
-      <div className="mt-2 flex flex-col">
+      <div className="py-[60px] flex flex-col">
         {isLoading && <ProgressBar />}
         <div className="py-2 align-middle inline-block min-w-full xs:px-4 sm:px-6 lg:px-8">
           <div className="shadow overflow-auto t-2 sm:rounded-lg"></div>

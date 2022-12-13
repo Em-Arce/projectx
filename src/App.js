@@ -1,25 +1,16 @@
-import logo from './logo.svg';
+import React from "react"
 import './App.css';
+import PaginationTable from './components/AllCoinsTable';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    return (
+        <div>
+            <nav className="relative flex justify-center align-center max-w-md mx-auto bg-white overflow-hidden md:max-w-2xl mt-2 mb-2">
+              <h4 className="text-xl sm: text-sm font-semibold leading-normal mt-2 mb-2">All Cryptocurrencies</h4>
+            </nav>
+            <PaginationTable />
+        </div>
+    )
 }
 
 export default App;
